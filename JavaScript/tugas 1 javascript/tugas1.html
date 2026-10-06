@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Luas Bangun Datar Lengkap</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 550px;
+            margin: 30px auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #444;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .input-group {
+            display: none; /* Sembunyikan field input default */
+        }
+        .input-group.active {
+            display: block; /* Tampilkan field input yang dipilih */
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4fc;
+            border-left: 5px solid #3498db;
+            border-radius: 4px;
+            display: none;
+        }
+        .result-box h3 {
+            margin: 0 0 5px 0;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Kalkulator Bangun Datar Lengkap</h2>
+
+        <!-- Dropdown Pilih Bangun Datar Lengkap -->
+        <div class="form-group">
+            <label for="jenisBangun">Pilih Bangun Datar:</label>
+            <select id="jenisBangun" onchange="pilihBangunDatar()">
+                <option value="persegiPanjang">Persegi Panjang</option>
+                <option value="bujurSangkar">Bujur Sangkar (Persegi)</option>
+                <option value="segitiga">Segitiga</option>
+                <option value="jajarGenjang">Jajar Genjang</option>
+                <option value="trapesium">Trapesium</option>
+                <option value="layangLayang">Layang-Layang</option>
+                <option value="belahKetupat">Belah Ketupat</option>
+                <option value="lingkaran">Lingkaran</option>
+            </select>
+        </div>
+
+        <!-- 1. Form Persegi Panjang -->
+        <div id="form-persegiPanjang" class="input-group active">
+            <div class="form-group">
+                <label for="panjang">Panjang (cm):</label>
+                <input type="number" id="panjang" placeholder="Masukkan panjang" min="0">
+            </div>
+            <div class="form-group">
+                <label for="lebar">Lebar (cm):</label>
+                <input type="number" id="lebar" placeholder="Masukkan lebar" min="0">
+            </div>
+        </div>
+
+        <!-- 2. Form Bujur Sangkar -->
+        <div id="form-bujurSangkar" class="input-group">
+            <div class="form-group">
+                <label for="sisi">Panjang Sisi (cm):</label>
+                <input type="number" id="sisi" placeholder="Masukkan sisi" min="0">
+            </div>
+        </div>
+
+        <!-- 3. Form Segitiga -->
+        <div id="form-segitiga" class="input-group">
+            <div class="form-group">
+                <label for="alasSegitiga">Alas (cm):</label>
+                <input type="number" id="alasSegitiga" placeholder="Masukkan alas" min="0">
+            </div>
+            <div class="form-group">
+                <label for="tinggiSegitiga">Tinggi (cm):</label>
+                <input type="number" id="tinggiSegitiga" placeholder="Masukkan tinggi" min="0">
+            </div>
+        </div>
+
+        <!-- 4. Form Jajar Genjang -->
+        <div id="form-jajarGenjang" class="input-group">
+            <div class="form-group">
+                <label for="alasJG">Alas (cm):</label>
+                <input type="number" id="alasJG" placeholder="Masukkan alas" min="0">
+            </div>
+            <div class="form-group">
+                <label for="tinggiJG">Tinggi (cm):</label>
+                <input type="number" id="tinggiJG" placeholder="Masukkan tinggi" min="0">
+            </div>
+        </div>
+
+        <!-- 5. Form Trapesium -->
+        <div id="form-trapesium" class="input-group">
+            <div class="form-group">
+                <label for="sisiA">Sisi Sejajar A (a) (cm):</label>
+                <input type="number" id="sisiA" placeholder="Masukkan sisi sejajar A" min="0">
+            </div>
+            <div class="form-group">
+                <label for="sisiB">Sisi Sejajar B (b) (cm):</label>
+                <input type="number" id="sisiB" placeholder="Masukkan sisi sejajar B" min="0">
+            </div>
+            <div class="form-group">
+                <label for="tinggiTrapesium">Tinggi (cm):</label>
+                <input type="number" id="tinggiTrapesium" placeholder="Masukkan tinggi" min="0">
+            </div>
+        </div>
+
+        <!-- 6. Form Layang-Layang -->
+        <div id="form-layangLayang" class="input-group">
+            <div class="form-group">
+                <label for="d1Layang">Diagonal 1 (d1) (cm):</label>
+                <input type="number" id="d1Layang" placeholder="Masukkan diagonal 1" min="0">
+            </div>
+            <div class="form-group">
+                <label for="d2Layang">Diagonal 2 (d2) (cm):</label>
+                <input type="number" id="d2Layang" placeholder="Masukkan diagonal 2" min="0">
+            </div>
+        </div>
+
+        <!-- 7. Form Belah Ketupat -->
+        <div id="form-belahKetupat" class="input-group">
+            <div class="form-group">
+                <label for="d1Ketupat">Diagonal 1 (d1) (cm):</label>
+                <input type="number" id="d1Ketupat" placeholder="Masukkan diagonal 1" min="0">
+            </div>
+            <div class="form-group">
+                <label for="d2Ketupat">Diagonal 2 (d2) (cm):</label>
+                <input type="number" id="d2Ketupat" placeholder="Masukkan diagonal 2" min="0">
+            </div>
+        </div>
+
+        <!-- 8. Form Lingkaran -->
+        <div id="form-lingkaran" class="input-group">
+            <div class="form-group">
+                <label for="rLingkaran">Jari-jari (r) (cm):</label>
+                <input type="number" id="rLingkaran" placeholder="Masukkan jari-jari" min="0">
+            </div>
+        </div>
+
+        <!-- Tombol Hitung -->
+        <button onclick="prosesHitung()">Hitung Luas</button>
+
+        <!-- Tempat Menampilkan Hasil -->
+        <div id="hasilHitung" class="result-box">
+            <h3 id="judulHasil">Hasil Perhitungan</h3>
+            <p id="teksHasil"></p>
+        </div>
+    </div>
+
+    <script>
+        // ===================================================
+        // FUNGSI-FUNGSI MENGHITUNG LUAS BANGUN DATAR
+        // ===================================================
+
+        // 1. Luas Persegi Panjang (Panjang x Lebar)
+        function hitungLuasPersegiPanjang(panjang, lebar) {
+            return panjang * lebar;
+        }
+
+        // 2. Luas Bujur Sangkar / Persegi (Sisi x Sisi)
+        function hitungLuasBujurSangkar(sisi) {
+            return sisi * sisi;
+        }
+
+        // 3. Luas Segitiga (0.5 x Alas x Tinggi)
+        function hitungLuasSegitiga(alas, tinggi) {
+            return 0.5 * alas * tinggi;
+        }
+
+        // 4. Luas Jajar Genjang (Alas x Tinggi)
+        function hitungLuasJajarGenjang(alas, tinggi) {
+            return alas * tinggi;
+        }
+
+        // 5. Luas Trapesium (0.5 x (Sisi A + Sisi B) x Tinggi)
+        function hitungLuasTrapesium(sisiA, sisiB, tinggi) {
+            return 0.5 * (sisiA + sisiB) * tinggi;
+        }
+
+        // 6. Luas Layang-Layang (0.5 x Diagonal 1 x Diagonal 2)
+        function hitungLuasLayangLayang(d1, d2) {
+            return 0.5 * d1 * d2;
+        }
+
+        // 7. Luas Belah Ketupat (0.5 x Diagonal 1 x Diagonal 2)
+        function hitungLuasBelahKetupat(d1, d2) {
+            return 0.5 * d1 * d2;
+        }
+
+        // 8. Luas Lingkaran (π x r x r)
+        function hitungLuasLingkaran(r) {
+            return Math.PI * r * r;
+        }
+
+        // ===================================================
+        // FUNGSI NAVIGASI TAMPILAN FORM
+        // ===================================================
+        function pilihBangunDatar() {
+            let pilihan = document.getElementById("jenisBangun").value;
+
+            // Sembunyikan semua grup input
+            document.querySelectorAll(".input-group").forEach(group => {
+                group.classList.remove("active");
+            });
+
+            // Tampilkan grup input sesuai pilihan dropdown
+            document.getElementById(`form-${pilihan}`).classList.add("active");
+
+            // Sembunyikan box hasil terdahulu
+            document.getElementById("hasilHitung").style.display = "none";
+        }
+
+        // ===================================================
+        // FUNGSI EKSEKUSI PERHITUNGAN & VALIDASI
+        // ===================================================
+        function prosesHitung() {
+            let pilihan = document.getElementById("jenisBangun").value;
+            let hasil = 0;
+            let keterangan = "";
+
+            if (pilihan === "persegiPanjang") {
+                let p = parseFloat(document.getElementById("panjang").value);
+                let l = parseFloat(document.getElementById("lebar").value);
+
+                if (isNaN(p) || isNaN(l) || p <= 0 || l <= 0) return alertValidasi();
+
+                hasil = hitungLuasPersegiPanjang(p, l);
+                keterangan = `Panjang: <b>${p} cm</b> | Lebar: <b>${l} cm</b><br><b>Luas Persegi Panjang = ${hasil.toFixed(2)} cm²</b>`;
+
+            } else if (pilihan === "bujurSangkar") {
+                let s = parseFloat(document.getElementById("sisi").value);
+
+                if (isNaN(s) || s <= 0) return alertValidasi();
+
+                hasil = hitungLuasBujurSangkar(s);
+                keterangan = `Sisi: <b>${s} cm</b><br><b>Luas Bujur Sangkar = ${hasil.toFixed(2)} cm²</b>`;
+
+            } else if (pilihan === "segitiga") {
+                let a = parseFloat(document.getElementById("alasSegitiga").value);
+                let t = parseFloat(document.getElementById("tinggiSegitiga").value);
+
+                if (isNaN(a) || isNaN(t) || a <= 0 || t <= 0) return alertValidasi();
+
+                hasil = hitungLuasSegitiga(a, t);
+                keterangan = `Alas: <b>${a} cm</b> | Tinggi: <b>${t} cm</b><br><b>Luas Segitiga = ${hasil.toFixed(2)} cm²</b>`;
+
+            } else if (pilihan === "jajarGenjang") {
+                let a = parseFloat(document.getElementById("alasJG").value);
+                let t = parseFloat(document.getElementById("tinggiJG").value);
+
+                if (isNaN(a) || isNaN(t) || a <= 0 || t <= 0) return alertValidasi();
+
+                hasil = hitungLuasJajarGenjang(a, t);
+                keterangan = `Alas: <b>${a} cm</b> | Tinggi: <b>${t} cm</b><br><b>Luas Jajar Genjang = ${hasil.toFixed(2)} cm²</b>`;
+
+            } else if (pilihan === "trapesium") {
+                let a = parseFloat(document.getElementById("sisiA").value);
+                let b = parseFloat(document.getElementById("sisiB").value);
+                let t = parseFloat(document.getElementById("tinggiTrapesium").value);
+
+                if (isNaN(a) || isNaN(b) || isNaN(t) || a <= 0 || b <= 0 || t <= 0) return alertValidasi();
+
+                hasil = hitungLuasTrapesium(a, b, t);
+                keterangan = `Sisi A: <b>${a} cm</b> | Sisi B: <b>${b} cm</b> | Tinggi: <b>${t} cm</b><br><b>Luas Trapesium = ${hasil.toFixed(2)} cm²</b>`;
+
+            } else if (pilihan === "layangLayang") {
+                let d1 = parseFloat(document.getElementById("d1Layang").value);
+                let d2 = parseFloat(document.getElementById("d2Layang").value);
+
+                if (isNaN(d1) || isNaN(d2) || d1 <= 0 || d2 <= 0) return alertValidasi();
+
+                hasil = hitungLuasLayangLayang(d1, d2);
+                keterangan = `d1: <b>${d1} cm</b> | d2: <b>${d2} cm</b><br><b>Luas Layang-Layang = ${hasil.toFixed(2)} cm²</b>`;
+
+            } else if (pilihan === "belahKetupat") {
+                let d1 = parseFloat(document.getElementById("d1Ketupat").value);
+                let d2 = parseFloat(document.getElementById("d2Ketupat").value);
+
+                if (isNaN(d1) || isNaN(d2) || d1 <= 0 || d2 <= 0) return alertValidasi();
+
+                hasil = hitungLuasBelahKetupat(d1, d2);
+                keterangan = `d1: <b>${d1} cm</b> | d2: <b>${d2} cm</b><br><b>Luas Belah Ketupat = ${hasil.toFixed(2)} cm²</b>`;
+
+            } else if (pilihan === "lingkaran") {
+                let r = parseFloat(document.getElementById("rLingkaran").value);
+
+                if (isNaN(r) || r <= 0) return alertValidasi();
+
+                hasil = hitungLuasLingkaran(r);
+                keterangan = `Jari-jari (r): <b>${r} cm</b><br><b>Luas Lingkaran = ${hasil.toFixed(2)} cm²</b>`;
+            }
+
+            // Tampilkan hasil di console browser
+            console.log(`Perhitungan Luas ${pilihan}: ${hasil}`);
+
+            // Tampilkan hasil di UI HTML
+            let boxHasil = document.getElementById("hasilHitung");
+            document.getElementById("teksHasil").innerHTML = keterangan;
+            boxHasil.style.display = "block";
+        }
+
+        // Helper fungsi alert jika input tidak valid
+        function alertValidasi() {
+            alert("Harap masukkan nilai angka yang valid dan lebih dari 0!");
+        }
+    </script>
+</body>
+</html>
