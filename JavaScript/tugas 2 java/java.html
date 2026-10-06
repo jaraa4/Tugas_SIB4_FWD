@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Data Pegawai</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 900px;
+        }
+        .form-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        thead {
+            background-color: #f4f4f4;
+        }
+        tfoot {
+            background-color: #e9e9e9;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Input Data Pegawai</h2>
+        <form id="pegawaiForm">
+            <div class="form-group">
+                <label for="nama">Nama Pegawai:</label>
+                <input type="text" id="nama" placeholder="Contoh: Dodi Prayodi" required>
+            </div>
+            <div class="form-group">
+                <label for="umur">Umur (Tahun):</label>
+                <input type="number" id="umur" placeholder="Contoh: 25" required>
+            </div>
+            <div class="form-group">
+                <label for="jabatan">Jabatan:</label>
+                <select id="jabatan" required>
+                    <option value="">-- Pilih Jabatan --</option>
+                    <option value="Manajer">Manajer</option>
+                    <option value="Asisten Manajer">Asisten Manajer</option>
+                    <option value="Staff">Staff</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="status">Status Pernikahan:</label>
+                <select id="status" required>
+                    <option value="">-- Pilih Status --</option>
+                    <option value="Menikah">Menikah</option>
+                    <option value="Belum Menikah">Belum Menikah</option>
+                </select>
+            </div>
+            <button type="submit">Hitung & Tampilkan Data</button>
+        </form>
+    </div>
+
+    <h2>Tabel Gaji Pegawai</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nama Pegawai</th>
+                <th>Umur</th>
+                <th>Jabatan</th>
+                <th>Status</th>
+                <th>Gaji Pokok</th>
+                <th>Tunj. Jabatan (15%)</th>
+                <th>BPJS (10%)</th>
+                <th>Tunj. Keluarga (20%)</th>
+            </tr>
+        </thead>
+        <tbody id="tabelBody">
+            <tr>
+                <td colspan="8" style="text-align: center; color: #888;">Belum ada data. Silakan isi form di atas.</td>
+            </tr>
+        </tbody>
+        <tfoot id="tabelFoot" style="display: none;">
+            <tr>
+                <td colspan="4" style="text-align: center;">TOTAL GAJI</td>
+                <td colspan="4" id="totalGajiText">Rp 0</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <script>
+        const formatRupiah = (angka) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        };
+
+        document.getElementById('pegawaiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // 1. Ambil nilai dari input user
+            let nama = document.getElementById('nama').value;
+            let umur = document.getElementById('umur').value;
+            let jabatan = document.getElementById('jabatan').value;
+            let status = document.getElementById('status').value;
+
+            // 2. Logika IF-ELSE untuk Gaji Pokok
+            let gapok = 0;
+            if (jabatan === "Manajer") {
+                gapok = 15000000;
+            } else if (jabatan === "Asisten Manajer") {
+                gapok = 10000000;
+            } else if (jabatan === "Staff") {
+                gapok = 5000000;
+            }
+
+            // 3. Tunjangan Jabatan & BPJS
+            let tunjJabatan = 0.15 * gapok;
+            let bpjs = 0.10 * gapok;
+
+            // 4. Logika TERNARY OPERATOR untuk Tunjangan Keluarga
+            let tunjKeluarga = (status === "Menikah") ? (0.20 * gapok) : 0;
+
+            // 5. Total Gaji
+            let totalGaji = gapok + tunjJabatan + bpjs + tunjKeluarga;
+
+            // 6. Cetak ke tbody
+            document.getElementById('tabelBody').innerHTML = `
+                <tr>
+                    <td>${nama}</td>
+                    <td>${umur} Tahun</td>
+                    <td>${jabatan}</td>
+                    <td>${status}</td>
+                    <td>${formatRupiah(gapok)}</td>
+                    <td>${formatRupiah(tunjJabatan)}</td>
+                    <td>${formatRupiah(bpjs)}</td>
+                    <td>${formatRupiah(tunjKeluarga)}</td>
+                </tr>
+            `;
+
+            // 7. Cetak ke tfoot
+            document.getElementById('totalGajiText').innerText = formatRupiah(totalGaji);
+            document.getElementById('tabelFoot').style.display = 'table-footer-group';
+        });
+    </script>
+
+</body>
+</html>
